@@ -3,6 +3,10 @@ name = "forge-cli"
 version = "0.1.0"
 edition = "2024"
 
+[[bin]]
+name = "forge"
+path = "src/main.rs"
+
 [dependencies]
 clap = { version = "4", features = ["derive"] }     # CLI Parsing
 anyhow = "1.0"                                      # Easy error handling
