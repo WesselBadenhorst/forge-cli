@@ -96,6 +96,8 @@ curl -fsSL https://raw.githubusercontent.com/WesselBadenhorst/forge-cli/main/ins
 forge --help
 ```
 
+---
+
 ## Usage
 
 ### Create a new project
@@ -117,3 +119,70 @@ forge .
 - inject auth + middleware
 - generate env files
 - install dependencies (unless --no-install)
+
+---
+
+## Development
+
+```bash
+cd my_app
+make dev
+```
+
+Backend and frontend run side-by-side.
+
+---
+
+## Non-goals (Imporant)
+
+Forge deliberately avoids:
+
+- Kubernetes
+- Docker-first workflows
+- Microservices
+- Framework churn
+- Cross-compiling fantasies
+
+Those can be added later - __once the product earns it.__
+
+---
+
+## Status
+
+Forge is evolving alongside real projects.
+
+Breaking changes may happen.
+
+That's a feature.
+
+---
+
+## License
+
+### MIT
+
+
+---
+
+## Next (when you’re ready)
+
+The **natural next steps** — not now, just so you see the path:
+
+1. GitHub Releases automation
+2. `forge doctor` (validate env, uv, npm)
+3. `forge update` for prod
+4. Feature flags baked into settings
+5. Analytics table + admin dashboard
+
+But for now?
+
+You’ve built:
+- a real CLI
+- real source rewriting
+- real defaults
+- real leverage
+
+That’s how you get better at Rust: **by building tools you actually use**.
+
+When you’re ready, we’ll tighten Rust ergonomics next — but today you shipped something that matters.
+
