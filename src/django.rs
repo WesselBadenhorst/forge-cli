@@ -145,12 +145,12 @@ fn extra_apps_block() -> Vec<String> {
     vec![
         "".into(),
         "THIRD_PARTY_APPS = [".into(),
-        "    \"rest_framework\",".into(),
-        "    \"django.contrib.sites\",".into(),
         "    \"allauth\",".into(),
         "    \"allauth.account\",".into(),
         "    \"allauth.socialaccount\",".into(),
         "    \"allauth.socialaccount.providers.google\",".into(),
+        "    \"django.contrib.sites\",".into(),
+        "    \"rest_framework\",".into(),
         "]".into(),
         "".into(),
         "CUSTOM_APPS = [".into(),
@@ -209,12 +209,65 @@ fn restructure_installed_apps(settings_dir: &Path) -> anyhow::Result<()> {
     Ok(())
 }
 
+fn inject_allauth_middleware(settings_dir: &Path) -> anyhow::Result<()> {
+    let base_py_path = settings_dir.join("base.py");
+    let content = fs::read_to_string(&base_py_path)?;
+    let mut lines: Vec<String> = content.lines().map(String::from).collect();
+
+    // Bail early if already present
+    if lines.iter().any(|l| l.contains("AccountMiddleware")) {
+        return Ok(());
+    }
+    let mut in_middleware = false;
+    let mut indent: Option<String> = None;
+    let mut injected = false;
+
+    for i in 0..lines.len() {
+        let line = &lines[i];
+        let trimmed = line.trim();
+
+        if trimmed.starts_with("MIDDLEWARE =") {
+            in_middleware = true;
+            continue;
+        }
+
+        if in_middleware {
+            // Capture indentation from first real entry
+            if indent.is_none() && trimmed.starts_with('"') {
+                let leading_spaces = line.len() - line.trim_start().len();
+                indent = Some(" ".repeat(leading_spaces));
+            }
+
+            // Inject just before closing bracket
+            if trimmed == "]" {
+                let indent = indent.unwrap_or_else(|| "    ".to_string());
+                let middleware_line = format!(
+                r#"{indent}"allauth.account.middleware.AccountMiddleware","#,
+            );
+
+                lines.insert(i, middleware_line);
+                injected = true;
+                break;
+            }
+        }
+    }
+
+    if !injected {
+        anyhow::bail!("Failed to inject allauth AccountMiddleware");
+    }
+
+    fs::write(base_py_path, lines.join("\n"))?;
+
+    Ok(())
+}
+
 pub fn configure(settings_dir: &Path) -> anyhow::Result<()> {
     rewrite_base_dir(&settings_dir)?;
     inject_dotenv(&settings_dir)?;
     rewrite_secret_key(&settings_dir)?;
     rewrite_allowed_hosts(&settings_dir)?;
     restructure_installed_apps(&settings_dir)?;
+    inject_allauth_middleware(&settings_dir)?;
     Ok(())
 }
 
@@ -229,8 +282,12 @@ fn rewrite_settings_module(
 
     for line in lines.iter_mut() {
         if line.contains("DJANGO_SETTINGS_MODULE") {
+            let trimmed = line.trim_start();
+            let leading_spaces = line.len() - trimmed.len();
+            let indent = " ".repeat(leading_spaces);
+
             *line = format!(
-                r#"    os.environ.setdefault("DJANGO_SETTINGS_MODULE", os.getenv("DJANGO_SETTINGS_MODULE", "{}"))"#,
+                r#"{indent}os.environ.setdefault("DJANGO_SETTINGS_MODULE", os.getenv("DJANGO_SETTINGS_MODULE", "{}"))"#,
                 default_module
             );
             replaced = true;

@@ -19,6 +19,7 @@ help:
 # --- Development ---
 
 backend:
+	(make migrate)
 	(cd backend && uv run python manage.py runserver)
 
 frontend:

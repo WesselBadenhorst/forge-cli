@@ -1,30 +1,119 @@
-# The Tech Stack
+# Forge 🔥
 
-Web-first frontend + thin wrappers for everything else
+Forge is a personal scaffolding tool for building small, profitable SaaS products quickly — without overengineering or framework churn.
 
-## Foundation
-Stack decisions (based on everything you’ve said):
+It is opinionated, boring, and designed for solo developers who want **leverage**, not novelty.
 
-### Frontend
+---
 
-React + TypeScript
+## Why Forge Exists
 
-Vite (fast, minimal config, hot reload)
+After 20+ years of shipping software, the bottleneck is no longer:
+- languages
+- frameworks
+- frontend trends
 
-TailwindCSS (or vanilla CSS modules if you prefer strict control)
+The bottleneck is:
+- repetition
+- setup tax
+- forgetting what “good defaults” look like
+
+Forge exists to make sure **work stays done**.
+
+---
+
+## What Forge Generates
+
+Forge creates a full-stack project with:
 
 ### Backend
+- **Python + Django**
+- **Django REST Framework**
+- **django-allauth** (email + Google auth ready)
+- Environment-based settings:
+  - `base.py`
+  - `dev.py` (SQLite)
+  - `prod.py` (PostgreSQL)
+- `.env` + `.env.example`
+- Proper middleware + auth wiring
+- Clean settings layout from day one
 
-Django (Python) — you already have session auth and experience
+### Frontend
+- **Vite + React + TypeScript**
+- No native-look obsession
+- Consistent UI across platforms
+- Designed to build once and deploy everywhere
 
-Django REST Framework for API endpoints
+### Tooling
+- **uv** for Python dependency management
+- **npm** for frontend
+- **Makefile** at repo root:
+  - backend
+  - frontend
+  - dev
+  - prod update (future)
+- No containers by default
+- No clusters
+- No “magic scale”
 
-Frontend → Backend communication: REST (simplest, no GraphQL overhead)
+A $5 Linode is enough until it isn’t.
 
-### Targets
+---
 
-Web → primary
+## Philosophy
 
-Desktop → Tauri
+Forge is intentionally:
 
-Mobile (iOS / Android) → Capacitor
+- ❌ Not framework-agnostic
+- ❌ Not enterprise-ready
+- ❌ Not trying to be universal
+
+It **is**:
+- reproducible
+- understandable
+- debuggable
+- fast to iterate on
+
+Perfect for:
+- micro-SaaS
+- B2C tools
+- internal products
+- learning distribution + marketing
+
+---
+
+## Installation
+
+### One-line install
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/WesselBadenhorst/forge-cli/main/install.sh | sh
+```
+
+### Verify:
+
+```bash
+forge --help
+```
+
+## Usage
+
+### Create a new project
+
+```bash
+forge my_app
+```
+
+### Or initialize in the current directory
+
+```bash
+forge .
+```
+
+#### Forge will:
+
+- create backend + frontend
+- wire Django settings correctly
+- inject auth + middleware
+- generate env files
+- install dependencies (unless --no-install)

@@ -30,8 +30,10 @@ pub fn setup_django(project_root: &Path) -> anyhow::Result<()> {
             "django",
             "djangorestframework",
             "django-allauth",
+            "jwt",
             "python-dotenv",
             "psycopg[binary]",
+            "requests",
         ])
         .current_dir(&backend_dir)
         .status()?;
