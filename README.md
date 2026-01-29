@@ -161,28 +161,3 @@ That's a feature.
 
 ### MIT
 
-
----
-
-## Next (when you’re ready)
-
-The **natural next steps** — not now, just so you see the path:
-
-1. GitHub Releases automation
-2. `forge doctor` (validate env, uv, npm)
-3. `forge update` for prod
-4. Feature flags baked into settings
-5. Analytics table + admin dashboard
-
-But for now?
-
-You’ve built:
-- a real CLI
-- real source rewriting
-- real defaults
-- real leverage
-
-That’s how you get better at Rust: **by building tools you actually use**.
-
-When you’re ready, we’ll tighten Rust ergonomics next — but today you shipped something that matters.
-

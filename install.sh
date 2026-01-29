@@ -21,7 +21,6 @@ case "$ARCH" in
 esac
 
 case "$OS" in
-    linux) OS="unknown-linux-gnu" ;;
     darwin) OS="apple-darwin" ;;
     *)
         echo "Unsupported OS: $OS"
