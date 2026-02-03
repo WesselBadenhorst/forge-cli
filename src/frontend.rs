@@ -6,8 +6,9 @@ pub fn create_frontend(project_root: &Path) -> anyhow::Result<()> {
 
     let status = Command::new("npm")
         .args([
-            "create",
-            "vite@latest",
+            "exec",
+            "--yes",
+            "create-vite@latest",
             "frontend",
             "--",
             "--template",

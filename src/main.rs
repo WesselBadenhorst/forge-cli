@@ -11,9 +11,28 @@ mod frontend;
 mod makefile;
 
 use std::path::{Path, PathBuf};
+use std::process::Command;
 
 use clap::Parser;
 use cli::Args;
+
+fn require_cmd(cmd: &str, install_hint: &str) -> anyhow::Result<()> {
+    let ok = Command::new(cmd)
+        .arg("--version")
+        .stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .status()
+        .is_ok();
+
+    if !ok {
+        anyhow::bail!(
+            "{} is required but not fount.\n{}",
+            cmd,
+            install_hint,
+        );
+    }
+    Ok(())
+}
 
 fn resolve_project_root(args: &Args) -> anyhow::Result<PathBuf> {
     let cwd = std::env::current_dir()?;
@@ -35,8 +54,36 @@ fn resolve_project_root(args: &Args) -> anyhow::Result<PathBuf> {
     anyhow::bail!("Please provide a project name or '.'");
 }
 
+fn ensure_uv() -> anyhow::Result<()> {
+    if Command::new("uv").arg("--version").output().is_ok() {
+        return Ok(());
+    }
+
+    println!("📦 Installing uv…");
+
+    let status = Command::new("sh")
+        .args([
+            "-c",
+            "curl -Ls https://astral.sh/uv/install.sh | sh",
+        ])
+        .status()?;
+
+    if !status.success() {
+        anyhow::bail!("Failed to install uv");
+    }
+
+    Ok(())
+}
+
 fn main() -> anyhow::Result<()>{
     let args = Args::parse();
+
+    require_cmd("git", "Install git from https://git-scm.com")?;
+    require_cmd("python3", "Install Python 3.11+")?;
+    require_cmd("node", "Install Node.js from https://node.org")?;
+    require_cmd("npm", "npm should come with Node.js")?;
+
+    ensure_uv()?;
 
     let project_root = resolve_project_root(&args)?;
 

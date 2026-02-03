@@ -9,7 +9,7 @@ pub fn create(project_root: &Path) -> anyhow::Result<()> {
     fs::create_dir(&backend_dir)?;
 
     let status = Command::new("uv")
-        .arg("init")
+        .args(["init", "--no-git"])
         .current_dir(&backend_dir)
         .status()?;
 

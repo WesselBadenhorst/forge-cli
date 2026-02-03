@@ -1,6 +1,19 @@
 #!/usr/bin/env sh
 set -e
 
+require() {
+    if ! command -v "$1" >/dev/null 2>&1; then
+        echo "❌ Missing required dependency: $1"
+        echo "👉 $2"
+        exit 1
+    fi
+}
+
+require git "Install from https://git-scm.com"
+require python3 "Install Python 3.11+"
+require node "Install Node.js from https://nodejs.org"
+require npm "npm should come with Node.js"
+
 REPO="WesselBadenhorst/forge-cli"
 BIN_NAME="forge"
 INSTALL_DIR="/usr/local/bin"

@@ -84,6 +84,20 @@ Perfect for:
 
 ## Installation
 
+### Requirements
+
+Forge assumes the following tools are installed:
+
+- Git
+- Python 3.11+
+- Node.js 18+
+- npm (comes with Node)
+
+Optional (Forge will install automatically):
+- uv (Python package manager)
+
+Forge will fail fast with clear instructions if anything is missing.
+
 ### One-line install
 
 ```bash
