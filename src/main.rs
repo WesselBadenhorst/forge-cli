@@ -88,6 +88,7 @@ fn main() -> anyhow::Result<()>{
     let project_root = resolve_project_root(&args)?;
 
     fs::create_project_dir(&project_root)?;
+    fs::initialize_git(&project_root)?;
 
     frontend::create_frontend(&project_root)?;
 

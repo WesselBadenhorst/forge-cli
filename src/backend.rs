@@ -5,12 +5,9 @@ use std::fs;
 pub fn create(project_root: &Path) -> anyhow::Result<()> {
     println!("🐍 Creating backend with uv...");
 
-    let backend_dir = project_root.join("backend");
-    fs::create_dir(&backend_dir)?;
-
     let status = Command::new("uv")
-        .args(["init", "--no-git"])
-        .current_dir(&backend_dir)
+        .args(["init", "backend"])
+        .current_dir(&project_root)
         .status()?;
 
     if !status.success() {
